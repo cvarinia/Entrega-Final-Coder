@@ -1,0 +1,31 @@
+{
+  "_comentario": "Las 5 pruebas oficiales. 'aprobacion': 'aprobar' o 'rechazar_y_aprobar' (rechaza la primera version con el comentario y aprueba la segunda). No usar agencias que ya sean clientes de Headway.",
+  "casos": [
+    {
+      "agencia": "Vistatec",
+      "indicaciones": "Me interesa ofrecer localizacion de e-learning.",
+      "aprobacion": "aprobar"
+    },
+    {
+      "agencia": "Welocalize",
+      "indicaciones": "",
+      "aprobacion": "rechazar_y_aprobar",
+      "comentario": "Deja solo los dos servicios principales mas relevantes y saca el resto."
+    },
+    {
+      "agencia": "Alpha CRC",
+      "indicaciones": "Me interesa ofrecer DTP multilingue.",
+      "aprobacion": "aprobar"
+    },
+    {
+      "agencia": "SeproTec",
+      "indicaciones": "Escribi el mensaje en espanol.",
+      "aprobacion": "aprobar"
+    },
+    {
+      "agencia": "Lionbridge",
+      "indicaciones": "Me interesa ofrecer localizacion de prototipos en Figma.",
+      "aprobacion": "aprobar"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+# Entrega final - todo el sistema con UN comando:
+#
+#   docker compose up --build        (la primera vez tarda: construye la imagen)
+#
+# Despues:
+#   API + documentacion:   http://localhost:8000/docs
+#   Trazas (Phoenix):      http://localhost:6006
+#   Apagar:                docker compose down   (los datos quedan en los volumenes)
+#
+# Las claves salen del archivo .env (copia de .env.example). Las direcciones
+# internas (redis, chroma, phoenix) se pisan aca: dentro de la red de Docker,
+# cada servicio se encuentra por su nombre, no por "localhost".
+
+x-app: &app
+  build: .
+  env_file: .env
+  environment:
+    REDIS_URL: redis://redis:6379/0
+    CHROMA_HOST: chroma
+    CHROMA_PORT: "8000"
+    PHOENIX_COLLECTOR_ENDPOINT: http://phoenix:6006/v1/traces
+  depends_on:
+    redis:
+      condition: service_healthy
+    chroma:
+      condition: service_started
+    phoenix:
+      condition: service_started
+  restart: unless-stopped
+
+services:
+  api:
+    <<: *app
+    container_name: headway-api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+
+  worker:
+    <<: *app
+    container_name: headway-worker
+    # El worker indexa el corpus al arrancar (solo si cambio) y ejecuta los grafos.
+    command: python -m app.worker
+
+  redis:
+    # Redis 8 trae los modulos de busqueda y JSON que necesita el checkpointer
+    # de LangGraph. Un Redis 7 "pelado" NO sirve.
+    image: redis:8
+    container_name: headway-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-datos:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  phoenix:
+    image: arizephoenix/phoenix:version-20.19.0
+    container_name: headway-phoenix
+    ports:
+      - "6006:6006"   # dashboard + recepcion de trazas por HTTP (/v1/traces)
+    environment:
+      - PHOENIX_WORKING_DIR=/mnt/data
+    volumes:
+      - phoenix-datos:/mnt/data
+
+  chroma:
+    image: chromadb/chroma:1.5.9
+    container_name: headway-chroma
+    ports:
+      - "8001:8000"   # 8001 afuera para no chocar con la API; adentro es chroma:8000
+    volumes:
+      - chroma-datos:/data
+
+volumes:
+  redis-datos:
+  phoenix-datos:
+  chroma-datos:

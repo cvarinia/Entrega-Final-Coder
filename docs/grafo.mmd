@@ -1,0 +1,29 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	supervisor(supervisor)
+	investigador(investigador)
+	especialista(especialista)
+	aprobacion_match(aprobacion_match)
+	redactor(redactor)
+	sintesis(sintesis)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> supervisor;
+	aprobacion_match -.-> redactor;
+	aprobacion_match -.-> supervisor;
+	especialista --> supervisor;
+	investigador --> supervisor;
+	redactor --> supervisor;
+	supervisor -.-> aprobacion_match;
+	supervisor -.-> especialista;
+	supervisor -.-> investigador;
+	supervisor -.-> redactor;
+	supervisor -.-> sintesis;
+	sintesis --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

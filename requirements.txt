@@ -1,0 +1,36 @@
+# Entrega final - Sistema de propuestas comerciales de Headway
+# Probado con Python 3.12 (requisito de la consigna: 3.12+)
+
+# --- Agentes y grafo ---------------------------------------------------------
+langgraph>=1.2,<2                 # incluye langgraph.prebuilt (create_react_agent)
+langchain-core>=1.6,<2
+pydantic>=2.7,<3
+python-dotenv>=1.0
+pyyaml>=6.0                       # frontmatter de los archivos del corpus
+
+# --- LLM: se elige con PROVEEDOR en el .env (importaciones perezosas) ------
+langchain-anthropic>=1.7,<2       # PROVEEDOR=anthropic (el que usa la entrega)
+langchain-google-genai>=4.4,<5    # embeddings del RAG (siempre) y PROVEEDOR=gemini
+
+# --- RAG -----------------------------------------------------------------------
+chromadb>=1.5,<2                  # cliente asincrono (AsyncHttpClient) del servidor Chroma
+rank-bm25>=0.2.2                  # busqueda por palabras clave (mitad "lexica" del hibrido)
+
+# --- Busqueda web del Agente Investigador ------------------------------------
+tavily-python>=0.8                # cliente asincrono oficial (AsyncTavilyClient)
+
+# --- API, cola y checkpointer (reutilizado de la PE7) ------------------------
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+redis>=5.2                        # redis.asyncio
+langgraph-checkpoint-redis>=0.5,<1  # necesita Redis 8 del lado del servidor
+httpx>=0.27                       # cliente HTTP asincrono (tests de la API y scripts)
+
+# --- Observabilidad (reutilizado de la PE7) -----------------------------------
+arize-phoenix-otel>=0.17,<1
+openinference-instrumentation-langchain>=0.1.78,<0.2
+
+# --- Tests ---------------------------------------------------------------------
+pytest>=8
+pytest-asyncio>=0.24
+fakeredis>=2.26                   # Redis en memoria para los tests de la API
