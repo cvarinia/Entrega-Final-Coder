@@ -147,11 +147,25 @@ Modelos, URLs, prefijo de las colecciones de Chroma, límites y claves salen del
 
 Cada span lleva `session.id = job_id` (la ejecución inicial y las reanudaciones quedan agrupadas), la agencia, el modelo, el modelo de embeddings y la versión de los prompts.
 
-| | |
-|---|---|
-| ![Trazas](screenshots/01_trazas_pruebas.png) | ![Árbol de una traza](screenshots/02_arbol_traza.png) |
-| ![Sesión con rechazo](screenshots/03_sesion_rechazo.png) | ![Herramienta de entrega](screenshots/04_herramienta_entrega.png) |
-| ![Costos](screenshots/05_costos.png) | |
+**Las 11 trazas raíz de las pruebas** (latencia, tokens y costo por ejecución):
+
+![Trazas](screenshots/01_trazas_pruebas.png)
+
+**Una sesión completa (Vistatec):** la traza 1 corre supervisor → investigador → especialista → supervisor y se pausa en `aprobacion_match`. La traza 2 es la reanudación con `"aprobado": true` → redactor → síntesis.
+
+![Árbol de una traza](screenshots/02_arbol_traza.png)
+
+**Human-in-the-loop con rechazo (Welocalize):** tres trazas en la misma sesión: inicio, rechazo (el especialista arma la versión 2) y aprobación.
+
+![Sesión con rechazo](screenshots/03_sesion_rechazo.png)
+
+**La validación en acción:** el especialista intentó entregar un argumento central con *"escalar"*. La herramienta `entregar_match` lo rechazó (`"Tono exagerado en el argumento central: ['escalar']"`) y el agente corrigió en el mismo ciclo ReAct.
+
+![Herramienta de entrega](screenshots/04_herramienta_entrega.png)
+
+**Latencia por percentiles y estado de las trazas** (11 OK, 0 errores):
+
+![Costos](screenshots/05_costos.png)
 
 ### Lo que enseñaron las trazas
 
